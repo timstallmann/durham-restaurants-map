@@ -12,5 +12,10 @@ github_username:  jekyll
 
 # Build settings
 markdown: kramdown
+
 include:
  - .nojekyll
+
+exclude:
+ - "bower_components"
+ - "bower.json"

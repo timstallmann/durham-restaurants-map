@@ -1,0 +1,21 @@
+{
+  "name": "durham-restaurant-map",
+  "version": "0.0.0",
+  "homepage": "https://github.com/savaslabs/durham-restaurants-map",
+  "authors": [
+    "Tim Stallmann <tim@stallmann.mayfirst.org>"
+  ],
+  "description": "Map of restaurants in Durham which have closed.",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "leaflet.markercluster": "~0.4.0",
+    "leaflet": "~0.7.3"
+  }
+}
