@@ -19,3 +19,5 @@ include:
 exclude:
  - "bower_components"
  - "bower.json"
+ - "node_modules"
+ - "package.json"

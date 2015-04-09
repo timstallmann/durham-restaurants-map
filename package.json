@@ -1,0 +1,16 @@
+{
+  "name": "durham-restaurant-map",
+  "version": "1.0.0",
+  "description": "Map of inactive restaurants in Durham",
+  "main": "_site/index.html",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/savaslabs/durham-restaurants-map"
+  },
+  "author": "Tim Stallmann",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/savaslabs/durham-restaurants-map/issues"
+  },
+  "homepage": "https://github.com/savaslabs/durham-restaurants-map"
+}
