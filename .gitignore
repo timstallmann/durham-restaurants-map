@@ -2,3 +2,5 @@ _site
 .sass-cache
 /bower_components/
 /node_modules/
+/_include/vendor/
+/js/map_bundle.js

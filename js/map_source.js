@@ -1,9 +1,10 @@
 'use strict';
 
-var L = require('./leaflet.js');
-require('./leaflet-providers.js');
-var $ = require('./jquery-1.11.2.js');
-require('./bower_components/leaflet.markercluster/dist/leaflet.markercluster.js');
+// Browserify require commands to import libraries
+var L = require('../_includes/vendor/js/leaflet.js');
+require('../_includes/vendor/js/leaflet-providers.js');
+var $ = require('../_includes/vendor/js/jquery.js');
+require('../_includes/vendor/js/leaflet.markercluster.js');
 var leafletPiP = require('leaflet-pip');
 
 $(document).ready(function() {
@@ -49,7 +50,7 @@ function addRestaurants(data) {
 function addDurham(data) {
     durhamLayer = L.geoJson(data);
     // durhamLayer.addTo(map);
-    $.getJSON("inactive_restaurants_durham.geojson", addRestaurants);
+    $.getJSON("js/inactive_restaurants_durham.geojson", addRestaurants);
     map.fitBounds(durhamLayer.getBounds());
 }
 
@@ -61,5 +62,5 @@ function addDurham(data) {
     tiles.addTo(map);
     map.setView([35.9908385, -78.9005222], 15);
 
-    $.getJSON("durham.geojson", addDurham);
+    $.getJSON("js/durham.geojson", addDurham);
 });

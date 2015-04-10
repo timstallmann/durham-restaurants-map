@@ -51,9 +51,9 @@ $on-laptop:        800px;
         "syntax-highlighting"
 ;
 
-{% include bower/leaflet/dist/leaflet.css %}
-{% include bower/leaflet.markercluster/dist/MarkerCluster.css %}
-{% include bower/leaflet.markercluster/dist//MarkerCluster.default.css %}
+{% include vendor/css/leaflet.css %}
+{% include vendor/css/MarkerCluster.css %}
+{% include vendor/css/MarkerCluster.default.css %}
 
 
 // Site specific CSS
