@@ -50,3 +50,14 @@ $on-laptop:        800px;
         "layout",
         "syntax-highlighting"
 ;
+
+{% include libraries/leaflet.css %}
+{% include libraries/MarkerCluster.css %}
+{% include libraries/MarkerCluster.default.css %}
+
+
+// Site specific CSS
+#map {
+  height: 600px;
+  width: 600px;
+}
