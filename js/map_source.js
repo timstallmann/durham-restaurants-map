@@ -34,7 +34,6 @@ function checkPointInDurham(point) {
 function addRestaurants(data) {
     var markers = new L.MarkerClusterGroup({
         showCoverageOnHover: false,
-        disableClusteringAtZoom: 15,
         maxClusterRadius: 40,
         singleMarkerMode: true
     });
