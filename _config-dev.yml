@@ -8,8 +8,8 @@ github_username: savaslabs
 
 
 # Site settings
-baseurl: "/durham-restaurants-map/" # the subpath of your site, e.g. /blog/
-savas_baseurl: ""
+baseurl: "" # the subpath of your site, e.g. /blog/
+savas_baseurl: "http://www.savaslabs.com"
 url: "" # the base hostname & protocol for your site
 
 # Build settings

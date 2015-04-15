@@ -29,8 +29,11 @@
                 }
             },
             exec: {
+                jekyll_dev: {
+                    cmd: "jekyll build --trace --config _config.yml,_config-dev.yml",
+                },
                 jekyll: {
-                    cmd: "jekyll build --trace"
+                    cmd: "jekyll build --trace",
                 }
             },
             watch: {
@@ -39,7 +42,7 @@
                 },
                 source: {
                     files: ["_drafts/**/*", "_includes/**/*", "_layouts/**/*", "_posts/**/*", "css/**/*", "js/**/*", "_config.yml", "*.html", "*.md"],
-                    tasks: ["exec:jekyll"]
+                    tasks: ["exec:jekyll_dev"]
                 }
             },
             connect: {
@@ -54,18 +57,16 @@
             git_deploy: {
                 timstallmann: {
                     options: {
-                        url: 'git@github.com:timstallmann/durham-restaurants-map.git',
+                        url: 'git@github.com:savaslabs/durham-restaurants-map.git',
                         branch: 'gh-pages'
                     },
                     src: '_site/'
                 }
             }
-
-
         });
-        grunt.registerTask("build", ["bower", "browserify", "exec:jekyll"]);
+        grunt.registerTask("build", ["bower", "browserify", "exec:jekyll_dev"]);
         grunt.registerTask("serve", ["build", "connect:server", "watch"]);
-        grunt.registerTask("deploy", ["build", "git_deploy"]);
+        grunt.registerTask("deploy", ["bower", "browserify", "exec:jekyll", "git_deploy"]);
         return grunt.registerTask("default", ["serve"]);
     };
 

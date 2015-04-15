@@ -16,8 +16,7 @@ Based on a workflow from [here](http://www.aymerick.com/2014/07/22/jekyll-github
 
 ## To push to gh-pages:
 
-1. Run `grunt deploy`. Currently this pushes to the gh-pages branch on timstallmann's fork of the repo 
-because the savaslabs repo github pages isn't set up right, yet.
+1. Run `grunt deploy` to push to the gh-pages branch, which will publish to `www.savaslabs.com/durham-restaurants-map`
 
 ## Notes
 
