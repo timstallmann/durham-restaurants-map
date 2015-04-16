@@ -42,7 +42,7 @@
                 },
                 source: {
                     files: ["_drafts/**/*", "_includes/**/*", "_layouts/**/*", "_posts/**/*", "css/**/*", "js/**/*", "_config.yml", "*.html", "*.md"],
-                    tasks: ["exec:jekyll_dev"]
+                    tasks: ["browserify", "exec:jekyll_dev"]
                 }
             },
             connect: {
