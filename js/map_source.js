@@ -14,10 +14,15 @@ $(document).ready(function() {
             function($1) { return $1.toUpperCase(); });
     }
 
-    function onEachFeature(feature, layer) {
+    function bindRestaurantPopup(feature, layer) {
         if (feature.properties && feature.properties.premise_name) {
             layer.bindPopup(toProperCase(feature.properties.premise_name) + "<br>" + toProperCase(feature.properties.premise_address1));
         }
+    }
+
+    function showRestaurantMarker(data, latlng) {
+        var restaurantIcon = new L.divIcon({ className: "restaurant-icon" });
+        return L.marker(latlng, { icon: restaurantIcon }).addTo(map);
     }
 
     function checkPointInDurham(point) {
@@ -31,18 +36,27 @@ $(document).ready(function() {
     }
 
     function addRestaurants(data) {
-        var markers = new L.MarkerClusterGroup({
-            showCoverageOnHover: false,
-            maxClusterRadius: 40,
-            singleMarkerMode: true
-        });
 
         var geoLayer = L.geoJson(data, {
-            onEachFeature: onEachFeature,
+            pointToLayer: showRestaurantMarker,
+            onEachFeature: bindRestaurantPopup,
             filter: checkPointInDurham
-        })
-        markers.addLayer(geoLayer);
-        markers.addTo(map);
+        });
+
+        geoLayer.addTo(map);
+    }
+
+    // Scale marker size with map zoom
+    function resizeMarkers(event) {
+        var curZoom = map.getZoom();
+
+        if (curZoom <= 10) {
+            document.body.className = "zoom-10";
+        }
+        else {
+            document.body.className = "zoom-" + curZoom;
+        }
+
     }
 
     function addDurham(data) {
@@ -50,6 +64,7 @@ $(document).ready(function() {
         // durhamLayer.addTo(map);
         $.getJSON("js/inactive_restaurants_durham.geojson", addRestaurants);
         map.fitBounds(durhamLayer.getBounds());
+        map.on('zoomend', resizeMarkers);
     }
 
     var map = L.map('map');
