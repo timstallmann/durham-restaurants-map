@@ -3,7 +3,6 @@
 // Browserify require commands to import libraries
 var L = require('../_includes/vendor/js/leaflet.js');
 require('../_includes/vendor/js/leaflet-providers.js');
-require('../_includes/vendor/js/leaflet.markercluster.js');
 var leafletPiP = require('leaflet-pip');
 
 $(document).ready(function() {
@@ -16,12 +15,14 @@ $(document).ready(function() {
 
     function bindRestaurantPopup(feature, layer) {
         if (feature.properties && feature.properties.premise_name) {
-            layer.bindPopup(toProperCase(feature.properties.premise_name) + "<br>" + toProperCase(feature.properties.premise_address1));
+            layer.bindPopup("<b>" + toProperCase(feature.properties.premise_name) + "</b><br>"
+                + toProperCase(feature.properties.premise_address1) + "<br>"
+                + "Opened " + parseYear(feature.properties.opening_date) +
+            (feature.properties.closing_date ? ", closed " + parseYear(feature.properties.closing_date) : ""));
         }
     }
 
     function showRestaurantMarker(data, latlng) {
-        var restaurantIcon = new L.divIcon({ className: "restaurant-icon" });
         return L.marker(latlng, { icon: restaurantIcon }).addTo(map);
     }
 
@@ -35,15 +36,53 @@ $(document).ready(function() {
         }
     }
 
-    function addRestaurants(data) {
+    function parseYear(str) {
+        var yearRe = /\d{4}/;
+        var years = str.match(yearRe);
 
-        var geoLayer = L.geoJson(data, {
+        if (years && years.length == 1) {
+            return years[0];
+        }
+        else {
+            return null;
+        }
+    }
+
+    // Filters out only restaurants which were active in year.
+    function filterByYear(data, year) {
+
+        var filteredFeatures = new Array();
+
+        for (var i = 0; i < data.features.length; i++) {
+            if ((data.features[i].properties.closing_date == "" || parseYear(data.features[i].properties.closing_date) >= year)
+                && parseYear(data.features[i].properties.opening_date) <= year) {
+                filteredFeatures.push(data.features[i]);
+            }
+        }
+
+        return {"features": filteredFeatures };
+    }
+
+    function addRestaurants(data, year) {
+
+        var filteredData = filterByYear(data, year);
+
+        if (geoLayer) {
+            map.removeLayer(geoLayer);
+        }
+
+        geoLayer = L.geoJson(filteredData, {
             pointToLayer: showRestaurantMarker,
             onEachFeature: bindRestaurantPopup,
             filter: checkPointInDurham
         });
 
         geoLayer.addTo(map);
+    }
+
+    function addRestaurantsCallback(data) {
+        restaurantData = data;
+        addRestaurants(data, 2000);
     }
 
     // Scale marker size with map zoom
@@ -59,30 +98,44 @@ $(document).ready(function() {
 
     }
 
-    function addDurham(data) {
+    function addDurham(data, year) {
         durhamLayer = L.geoJson(data);
         // durhamLayer.addTo(map);
-        $.getJSON("js/inactive_restaurants_durham.geojson", addRestaurants);
+        $.getJSON("js/durham_restaurants.geojson", addRestaurantsCallback);
         map.fitBounds(durhamLayer.getBounds());
         map.on('zoomend', resizeMarkers);
     }
 
+    var restaurantIcon = new L.divIcon({ className: "restaurant-icon" });
+    var restaurantData;
+    var geoLayer;
     var map = L.map('map');
-    L.Icon.Default.imagePath = "images";
     var durhamLayer;
+
     var tiles = L.tileLayer.provider('Stamen.Watercolor');
     tiles.addTo(map);
     map.setView([35.9908385, -78.9005222], 15);
 
-    $("#map").height(Math.max($(window).height() - $("header").height() - $("div.footer-copyright").height() - $(".post-title").height(), 300));
+    $("#map").height(Math.max($(window).height() - $("header").height() - $("div.footer-copyright").height() - $(".map-header").height() - 3, 300));
     map.invalidateSize();
 
     $(window).resize(function() {
-        $("#map").height(Math.max($(window).height() - $("header").height() - $("div.footer-copyright").height() - $(".post-title").height(), 300));
+        $("#map").height(Math.max($(window).height() - $("header").height() - $("div.footer-copyright").height() - $(".map-header").height() - 3, 300));
         map.invalidateSize();
         return true;
     });
 
     $.getJSON("js/durham.geojson", addDurham);
+
+    // Configure time slider buttons
+    $(".time-slider li")
+        .mouseover(function() { $(this).addClass("mouse-over"); })
+        .mouseout(function() { $(this).removeClass("mouse-over"); })
+        .click(function() {
+            $(".time-slider li").removeClass("selected");
+            $(this).addClass("selected");
+            addRestaurants(restaurantData, $(this).attr('id').slice(-4)); });
+
+    $("#year-2000").click();
 });
 

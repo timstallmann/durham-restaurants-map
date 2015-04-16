@@ -37,6 +37,35 @@ p {
   height: 100%;
 }
 
+.map-header {
+  text-align: center;
+}
+
+ul.time-slider {
+  margin: 0 auto;
+  padding: 0;
+  text-align: left;
+  display:inline-block;
+
+  li {
+    float: left;
+    padding: 2px 5px;
+    margin: 5px 10px;
+    background: white;
+
+    &.selected {
+      background-color: $savas-fuschia;
+    }
+
+    &.mouse-over {
+      background-color: lighten($savas-fuschia, 50);
+    }
+  }
+}
+
+
+// Map styling
+
 .restaurant-icon {
   background: $savas-fuschia;
   border: 6px solid $savas-fuschia;
@@ -50,18 +79,18 @@ p {
 
 @for $zoom from 10 through 16 {
   .zoom-#{$zoom} .restaurant-icon {
-    border-radius: 6px + (10px * ($zoom - 10)) / 6;
-    border-width: 6px + (10px * ($zoom - 10)) / 6;
-    left: - (10px * ($zoom - 10)) / 6;
-    top: - (10px * ($zoom - 10)) / 6;
+    border-radius: 6px + (8px * ($zoom - 10)) / 6;
+    border-width: 6px + (8px * ($zoom - 10)) / 6;
+    left: - (8px * ($zoom - 10)) / 6;
+    top: - (8px * ($zoom - 10)) / 6;
 
-    @if zoom = 13 {
+    @if $zoom == 13 {
       -moz-box-shadow: 0 0 1px 0px white;
       -webkit-box-shadow: 0 0 1px 0px white;
       box-shadow: 0 0 1px 0px white;
     }
 
-    @if $zoom > 14 {
+    @if $zoom > 13 {
       -moz-box-shadow: 0 0 2px 2px white;
       -webkit-box-shadow: 0 0 2px 2px white;
       box-shadow: 0 0 2px 2px white;
