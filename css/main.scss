@@ -68,32 +68,31 @@ ul.time-slider {
 
 .restaurant-icon {
   background: $savas-fuschia;
-  border: 6px solid $savas-fuschia;
-  border-radius: 6px;
+  border: 7px solid $savas-fuschia;
+  border-radius: 7px;
   -moz-box-shadow: 0 0 1px 0px $savas-fuschia;
   -webkit-box-shadow: 0 0 1px 0px $savas-fuschia;
   box-shadow: 0 0 1px 0px $savas-fuschia;
 }
 
+.restaurant-closed {
+  opacity: 0.6;
+}
+
 // Scale dependent icon sizes.
 
 @for $zoom from 10 through 16 {
-  .zoom-#{$zoom} .restaurant-icon {
-    border-radius: 6px + (8px * ($zoom - 10)) / 6;
-    border-width: 6px + (8px * ($zoom - 10)) / 6;
-    left: - (8px * ($zoom - 10)) / 6;
-    top: - (8px * ($zoom - 10)) / 6;
+  .zoom-#{$zoom} .restaurant-icon, .zoom-#{$zoom} .restaurant-closed {
 
-    @if $zoom == 13 {
+    border-radius: 7px + (4px * ($zoom - 10)) / 6;
+    border-width: 7px + (4px * ($zoom - 10)) / 6;
+    left: - (4px * ($zoom - 10)) / 6;
+    top: - (4px * ($zoom - 10)) / 6;
+
+    @if $zoom >= 13 {
       -moz-box-shadow: 0 0 1px 0px white;
       -webkit-box-shadow: 0 0 1px 0px white;
       box-shadow: 0 0 1px 0px white;
-    }
-
-    @if $zoom > 13 {
-      -moz-box-shadow: 0 0 2px 2px white;
-      -webkit-box-shadow: 0 0 2px 2px white;
-      box-shadow: 0 0 2px 2px white;
     }
   }
 }

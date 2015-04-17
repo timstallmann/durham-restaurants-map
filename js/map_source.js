@@ -23,7 +23,12 @@ $(document).ready(function() {
     }
 
     function showRestaurantMarker(data, latlng) {
-        return L.marker(latlng, { icon: restaurantIcon }).addTo(map);
+        if (data.properties.closing_date == "") {
+            return L.marker(latlng, {icon: restaurantIcon }).addTo(map);
+        }
+        else {
+            return L.marker(latlng, {icon: restaurantIconClosed }).addTo(map);
+        }
     }
 
     function checkPointInDurham(point) {
@@ -107,6 +112,8 @@ $(document).ready(function() {
     }
 
     var restaurantIcon = new L.divIcon({ className: "restaurant-icon" });
+    var restaurantIconClosed = new L.divIcon({ className: "restaurant-icon restaurant-closed" });
+
     var restaurantData;
     var geoLayer;
     var map = L.map('map');
