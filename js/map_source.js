@@ -119,8 +119,10 @@ $(document).ready(function() {
     var map = L.map('map');
     var durhamLayer;
 
-    var tiles = L.tileLayer.provider('Stamen.Watercolor');
-    tiles.addTo(map);
+    var watercolorTiles = L.tileLayer.provider('Stamen.Watercolor');
+    var labelTiles = L.tileLayer.provider('Stamen.TonerLabels');
+
+    watercolorTiles.addTo(map);
     map.setView([35.9908385, -78.9005222], 15);
 
     $("#map").height(Math.max($(window).height() - $("header").height() - $("div.footer-copyright").height() - $(".map-header").height() - 3, 300));
@@ -150,11 +152,11 @@ $(document).ready(function() {
         .click(function() {
             if ($(this).hasClass("selected")) {
                 $(".options li").removeClass("selected");
-                map.removeLayer(tonerTiles);
+                map.removeLayer(labelTiles);
             }
             else {
                 $(this).addClass("selected");
-                map.addLayer(tonerTiles);
+                map.addLayer(labelTiles);
             }
         });
 
