@@ -143,6 +143,21 @@ $(document).ready(function() {
             $(this).addClass("selected");
             addRestaurants(restaurantData, $(this).attr('id').slice(-4)); });
 
+    // Configure options buttons
+    $(".options li")
+        .mouseover(function() { $(this).addClass("mouse-over"); })
+        .mouseout(function() { $(this).removeClass("mouse-over"); })
+        .click(function() {
+            if ($(this).hasClass("selected")) {
+                $(".options li").removeClass("selected");
+                map.removeLayer(tonerTiles);
+            }
+            else {
+                $(this).addClass("selected");
+                map.addLayer(tonerTiles);
+            }
+        });
+
     $("#year-2000").click();
 });
 
