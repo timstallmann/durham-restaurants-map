@@ -10,6 +10,7 @@
 
 $savas-blue: #14133b;
 $savas-fuschia: #9e023b;
+$highlight: #fbf8b2;
 
 // Overrides to Savas CSS
 header.navigation .navigation-wrapper {
@@ -39,10 +40,17 @@ p {
 
 .map-header {
   text-align: center;
+  .post-description {
+    text-align: left;
+  }
+  p {
+    margin: 0 10%;
+  }
 }
 
 ul.time-slider, ul.options {
   margin: 0 auto;
+  margin-top: 10px;
   padding: 0;
   text-align: left;
   display:inline-block;
@@ -70,6 +78,22 @@ ul.options {
 
 // Map styling
 
+.legend {
+  color: #555;
+  background: transparentize(white, 0.3);
+  padding: 0 10px;
+  border-width: 2px;
+  border-radius: 2px;
+  line-height: 25px;
+  div {
+    width: 0;
+    height: 0;
+    float: left;
+    margin-right: 5px;
+    margin-top: 2px;
+  }
+}
+
 .restaurant-icon {
   background: $savas-fuschia;
   border: 7px solid $savas-fuschia;
@@ -79,27 +103,67 @@ ul.options {
   box-shadow: 0 0 1px 0px $savas-fuschia;
 }
 
-.restaurant-closed {
-  opacity: 0.6;
-}
-
 // Scale dependent icon sizes.
 
 @for $zoom from 10 through 16 {
-  .zoom-#{$zoom} .restaurant-icon, .zoom-#{$zoom} .restaurant-closed {
-
+  .zoom-#{$zoom} .restaurant-icon {
     border-radius: 7px + (3px * ($zoom - 10)) / 6;
     border-width: 7px + (3px * ($zoom - 10)) / 6;
     left: - (3px * ($zoom - 10)) / 6;
     top: - (3px * ($zoom - 10)) / 6;
 
-    @if $zoom >= 13 {
+    &.legend {
+      left: 0;
+      top: 0;
+    }
+  }
+
+  @if $zoom >= 14 {
+    .zoom-#{$zoom} .restaurant-icon {
       -moz-box-shadow: 0 0 2px 0px white;
       -webkit-box-shadow: 0 0 2px 0px white;
       box-shadow: 0 0 2px 0px white;
     }
+
+    .zoom-#{$zoom} .restaurant-new {
+      -moz-box-shadow: 0 0 2px 0px $highlight;
+      -webkit-box-shadow: 0 0 2px 0px $highlight;
+      box-shadow: 0 0 2px 0px $highlight;
+
+      -moz-animation: flash 1s ease-out;
+      -moz-animation-iteration-count: 1;
+
+      -webkit-animation: flash 1s ease-out;
+      -webkit-animation-iteration-count: 1;
+
+      -ms-animation: flash 1s ease-out;
+      -ms-animation-iteration-count: 1;
+    }
   }
 }
+
+.restaurant-closed {
+  opacity: 0.5;
+}
+
+@-webkit-keyframes flash {
+  0% { border-color:$highlight;}
+  50% { border-color:$highlight;}
+  100% {border-color:none;}
+}
+
+@-moz-keyframes flash {
+  0% { border-color: $highlight;}
+  50% { border-color: $highlight;}
+  100% {border-color: none;}
+}
+
+@-ms-keyframes flash {
+  0% { border-color: $highlight; }
+  50% { border-color: $highlight; }
+  100% {border-color: none;}
+}
+
 
 
 

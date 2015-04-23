@@ -22,9 +22,17 @@ $(document).ready(function() {
         }
     }
 
-    function showRestaurantMarker(data, latlng) {
+    function showRestaurantMarker(data, latlng, year) {
         if (data.properties.closing_date == "") {
-            return L.marker(latlng, {icon: restaurantIcon }).addTo(map);
+            if ((parseYear(data.properties.opening_date) <= year) && (parseYear(data.properties.opening_date) > year - 5)) {
+                return L.marker(latlng, {icon: restaurantIconNew }).addTo(map);
+            }
+            else {
+                return L.marker(latlng, {icon: restaurantIcon}).addTo(map);
+            }
+        }
+        else if ((parseYear(data.properties.opening_date) <= year) && (parseYear(data.properties.opening_date) > year - 5)) {
+            return L.marker(latlng, {icon: restaurantIconClosedNew }).addTo(map);
         }
         else {
             return L.marker(latlng, {icon: restaurantIconClosed }).addTo(map);
@@ -77,7 +85,7 @@ $(document).ready(function() {
         }
 
         geoLayer = L.geoJson(filteredData, {
-            pointToLayer: showRestaurantMarker,
+            pointToLayer: function(data, latlng) { return showRestaurantMarker(data, latlng, year); },
             onEachFeature: bindRestaurantPopup,
             filter: checkPointInDurham
         });
@@ -92,15 +100,16 @@ $(document).ready(function() {
 
     // Scale marker size with map zoom
     function resizeMarkers(event) {
-        var curZoom = map.getZoom();
+        zoom = map.getZoom();
 
-        if (curZoom <= 10) {
+        if (zoom <= 10) {
             document.body.className = "zoom-10";
         }
         else {
-            document.body.className = "zoom-" + curZoom;
+            document.body.className = "zoom-" + zoom;
         }
 
+        $(".info.legend").html(getLegendHtml(year, zoom));
     }
 
     function addDurham(data, year) {
@@ -111,13 +120,30 @@ $(document).ready(function() {
         map.on('zoomend', resizeMarkers);
     }
 
+    function getLegendHtml(year, zoom) {
+        var retHTML = "<b>Legend</b><ul>" +
+            "<li><div class='restaurant-icon'></div> Still open today</li>" +
+            "<li><div class='restaurant-icon restaurant-closed'></div> No longer open</li>";
+        if (zoom >= 14) {
+            retHTML +=
+            "<li><div class='restaurant-icon restaurant-new'></div> Newly opened in " + year + "</li>";
+        }
+        retHTML += "</ul><i>Data source: <a href='http://data.dconc.gov/'>Durham Open Data</a>.</i>";
+        return retHTML;
+    }
+
     var restaurantIcon = new L.divIcon({ className: "restaurant-icon" });
     var restaurantIconClosed = new L.divIcon({ className: "restaurant-icon restaurant-closed" });
+    var restaurantIconNew = new L.divIcon({ className: "restaurant-icon restaurant-new" });
+    var restaurantIconClosedNew = new L.divIcon({ className: "restaurant-icon restaurant-closed restaurant-new" });
 
     var restaurantData;
     var geoLayer;
     var map = L.map('map');
     var durhamLayer;
+
+    var year = 2000;
+    var zoom = 10;
 
     var watercolorTiles = L.tileLayer.provider('Stamen.Watercolor');
     var labelTiles = L.tileLayer.provider('Stamen.TonerLabels');
@@ -143,7 +169,10 @@ $(document).ready(function() {
         .click(function() {
             $(".time-slider li").removeClass("selected");
             $(this).addClass("selected");
-            addRestaurants(restaurantData, $(this).attr('id').slice(-4)); });
+            year = $(this).attr('id').slice(-4);
+            addRestaurants(restaurantData, year);
+            $(".info.legend").html(getLegendHtml(year, zoom));
+        });
 
     // Configure options buttons
     $(".options li")
@@ -160,6 +189,15 @@ $(document).ready(function() {
             }
         });
 
-    $("#year-2000").click();
+    // Add legend.
+    var legend = L.control({position: 'bottomright'});
+
+    legend.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'info legend');
+        div.innerHTML = getLegendHtml(year, zoom);
+        return div;
+    };
+
+    legend.addTo(map);
 });
 
