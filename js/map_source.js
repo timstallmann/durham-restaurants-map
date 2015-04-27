@@ -13,12 +13,33 @@ $(document).ready(function() {
             function($1) { return $1.toUpperCase(); });
     }
 
-    function bindRestaurantPopup(feature, layer) {
+    function setRestaurantPopupDescription(feature, layer) {
         if (feature.properties && feature.properties.premise_name) {
-            layer.bindPopup("<b>" + toProperCase(feature.properties.premise_name) + "</b><br>"
+            feature.properties.popup_text =
+                "<b>" + toProperCase(feature.properties.premise_name) + "</b><br>"
                 + toProperCase(feature.properties.premise_address1) + "<br>"
                 + "Opened " + parseYear(feature.properties.opening_date) +
-            (feature.properties.closing_date ? ", closed " + parseYear(feature.properties.closing_date) : ""));
+            (feature.properties.closing_date ? ", closed " + parseYear(feature.properties.closing_date) : "");
+        }
+    }
+
+    function showRestaurantPopup(e) {
+        if (zoom >= 13) {
+            var clickPoint = map.latLngToLayerPoint(e.latlng);
+            var bounds = L.latLngBounds([map.layerPointToLatLng([clickPoint.x - 1, clickPoint.y - 1]),
+                map.layerPointToLatLng([clickPoint.x + 1, clickPoint.y + 1])]);
+            var popupText = "";
+            map.eachLayer(function (layer) {
+                if (layer.feature && layer.feature.geometry.type == "Point")
+                    if (bounds.contains([layer.feature.geometry.coordinates[1], layer.feature.geometry.coordinates[0]]))
+                        if (layer.feature.properties.popup_text) {
+                            popupText += "<p>" + layer.feature.properties.popup_text + "</p>";
+                        }
+            });
+            map.openPopup(popupText, e.latlng);
+        }
+        else {
+            map.openPopup(e.layer.feature.properties.popup_text, [e.layer.feature.geometry.coordinates[1], e.layer.feature.geometry.coordinates[0]]);
         }
     }
 
@@ -86,11 +107,13 @@ $(document).ready(function() {
 
         geoLayer = L.geoJson(filteredData, {
             pointToLayer: function(data, latlng) { return showRestaurantMarker(data, latlng, year); },
-            onEachFeature: bindRestaurantPopup,
+            onEachFeature: setRestaurantPopupDescription,
             filter: checkPointInDurham
         });
 
         geoLayer.addTo(map);
+        geoLayer.on('click', showRestaurantPopup);
+
     }
 
     function addRestaurantsCallback(data) {
