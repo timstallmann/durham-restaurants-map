@@ -164,6 +164,18 @@ ul.options {
   100% {border-color: none;}
 }
 
+.leaflet-popup-content-wrapper {
+  border-radius: 0;
+  p {
+    color: black;
+    margin: 5px 0;
+  }
+}
+
+.leaflet-popup-content {
+  max-height: 300px;
+  overflow: auto;
+}
 
 
 
