@@ -18,8 +18,9 @@ $(document).ready(function() {
             feature.properties.popup_text =
                 "<b>" + toProperCase(feature.properties.premise_name) + "</b><br>"
                 + toProperCase(feature.properties.premise_address1) + "<br>"
-                + "Opened " + parseYear(feature.properties.opening_date) +
-            (feature.properties.closing_date ? ", closed " + parseYear(feature.properties.closing_date) : "");
+                + "Opened "
+                + (parseYear(feature.properties.opening_date) < 1991 ? "before 1991" : parseYear(feature.properties.opening_date))
+                + (feature.properties.closing_date ? ", closed " + parseYear(feature.properties.closing_date) : "");
         }
     }
 
@@ -162,7 +163,7 @@ $(document).ready(function() {
 
     var restaurantData;
     var geoLayer;
-    var map = L.map('map');
+    var map = L.map('map', { minZoom: 8 });
     var durhamLayer;
 
     var year = 2000;
@@ -222,5 +223,8 @@ $(document).ready(function() {
     };
 
     legend.addTo(map);
+
+    // Set map bounds
+    map.setMaxBounds(map.getBounds().pad(25));
 });
 
