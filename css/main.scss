@@ -19,11 +19,13 @@ header.navigation .navigation-wrapper {
 
 p {
   color: white;
-  &.post-title {
-    font-weight: bold;
-    padding: 0 25px;
-    text-align: center;
-  }
+}
+
+h1 {
+  font-weight: bold;
+  padding: 0 25px;
+  color: white;
+  font-size: inherit;
 }
 
 // Site specific CSS
